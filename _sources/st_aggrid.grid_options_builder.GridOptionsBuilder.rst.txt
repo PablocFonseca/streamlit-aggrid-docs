@@ -1,0 +1,32 @@
+﻿st\_aggrid.grid\_options\_builder.GridOptionsBuilder
+====================================================
+
+.. currentmodule:: st_aggrid.grid_options_builder
+
+.. autoclass:: GridOptionsBuilder
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~GridOptionsBuilder.__init__
+      ~GridOptionsBuilder.build
+      ~GridOptionsBuilder.configure_auto_height
+      ~GridOptionsBuilder.configure_column
+      ~GridOptionsBuilder.configure_columns
+      ~GridOptionsBuilder.configure_default_column
+      ~GridOptionsBuilder.configure_grid_options
+      ~GridOptionsBuilder.configure_pagination
+      ~GridOptionsBuilder.configure_selection
+      ~GridOptionsBuilder.configure_side_bar
+      ~GridOptionsBuilder.from_dataframe
+   
+   
+
+   
+   
+   

@@ -1,0 +1,356 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>GridOptionsBuilder &#8212; streamlit-aggrid 0.2.3 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinxdoc.css" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="AgGrid" href="AgGrid.html" />
+    <link rel="prev" title="Welcome to streamlit-aggrid’s documentation!" href="index.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="AgGrid.html" title="AgGrid"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Welcome to streamlit-aggrid’s documentation!"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">streamlit-aggrid 0.2.3 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">GridOptionsBuilder</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="gridoptionsbuilder">
+<h1>GridOptionsBuilder<a class="headerlink" href="#gridoptionsbuilder" title="Permalink to this headline">¶</a></h1>
+<p>The <cite>GridOptionsBuilder</cite> class may be used to help defining <a class="reference external" href="https://www.ag-grid.com/javascript-data-grid/grid-properties/">gridOptions</a> dictionary.
+Eventhough grid’s configuration can be done by passing a dictionary, it is recommended to use the <cite>GridOptionsBuilder</cite>.</p>
+<p class="rubric">Methods</p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#st_aggrid.grid_options_builder.GridOptionsBuilder.from_dataframe" title="st_aggrid.grid_options_builder.GridOptionsBuilder.from_dataframe"><code class="xref py py-obj docutils literal notranslate"><span class="pre">from_dataframe</span></code></a>(dataframe, ...)</p></td>
+<td><p>Initializes a GridOptionsBuilder from a pandas dataframe.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#st_aggrid.grid_options_builder.GridOptionsBuilder.configure_auto_height" title="st_aggrid.grid_options_builder.GridOptionsBuilder.configure_auto_height"><code class="xref py py-obj docutils literal notranslate"><span class="pre">configure_auto_height</span></code></a>([autoHeight])</p></td>
+<td><p>Configures auto height behavior.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#st_aggrid.grid_options_builder.GridOptionsBuilder.configure_column" title="st_aggrid.grid_options_builder.GridOptionsBuilder.configure_column"><code class="xref py py-obj docutils literal notranslate"><span class="pre">configure_column</span></code></a>(field[, header_name])</p></td>
+<td><p>Configures an individual column check <a class="reference external" href="https://www.ag-grid.com/javascript-grid-column-properties/">https://www.ag-grid.com/javascript-grid-column-properties/</a> for more information.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#st_aggrid.grid_options_builder.GridOptionsBuilder.configure_columns" title="st_aggrid.grid_options_builder.GridOptionsBuilder.configure_columns"><code class="xref py py-obj docutils literal notranslate"><span class="pre">configure_columns</span></code></a>([column_names])</p></td>
+<td><p>Batch configures columns.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#st_aggrid.grid_options_builder.GridOptionsBuilder.configure_default_column" title="st_aggrid.grid_options_builder.GridOptionsBuilder.configure_default_column"><code class="xref py py-obj docutils literal notranslate"><span class="pre">configure_default_column</span></code></a>([min_column_width, ...])</p></td>
+<td><p>Sets default columns definitions.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#st_aggrid.grid_options_builder.GridOptionsBuilder.configure_grid_options" title="st_aggrid.grid_options_builder.GridOptionsBuilder.configure_grid_options"><code class="xref py py-obj docutils literal notranslate"><span class="pre">configure_grid_options</span></code></a>(**props)</p></td>
+<td><p>Merges key-pair values to gridOptions dictionary.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#st_aggrid.grid_options_builder.GridOptionsBuilder.configure_pagination" title="st_aggrid.grid_options_builder.GridOptionsBuilder.configure_pagination"><code class="xref py py-obj docutils literal notranslate"><span class="pre">configure_pagination</span></code></a>([enabled, ...])</p></td>
+<td><p>Configure grid's pagination feature</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#st_aggrid.grid_options_builder.GridOptionsBuilder.configure_selection" title="st_aggrid.grid_options_builder.GridOptionsBuilder.configure_selection"><code class="xref py py-obj docutils literal notranslate"><span class="pre">configure_selection</span></code></a>([selection_mode, ...])</p></td>
+<td><p>Configure the grid selection behavior.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#st_aggrid.grid_options_builder.GridOptionsBuilder.configure_side_bar" title="st_aggrid.grid_options_builder.GridOptionsBuilder.configure_side_bar"><code class="xref py py-obj docutils literal notranslate"><span class="pre">configure_side_bar</span></code></a>([filters_panel, ...])</p></td>
+<td><p>Configures the side bar.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#st_aggrid.grid_options_builder.GridOptionsBuilder.build" title="st_aggrid.grid_options_builder.GridOptionsBuilder.build"><code class="xref py py-obj docutils literal notranslate"><span class="pre">build</span></code></a>()</p></td>
+<td><p>Builds the gridOptions dictionary</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py class">
+<dt class="sig sig-object py" id="st_aggrid.grid_options_builder.GridOptionsBuilder">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">GridOptionsBuilder</span></span><a class="reference internal" href="_modules/st_aggrid/grid_options_builder.html#GridOptionsBuilder"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#st_aggrid.grid_options_builder.GridOptionsBuilder" title="Permalink to this definition">¶</a></dt>
+<dd><p>Auxiliary class that builds gridOptions dictionary.</p>
+<p>Use this class to help AgGrid configuration. Any configuration supported by the
+gridOptions dictionary can be configured using this class. check <a class="reference external" href="https://www.ag-grid.com/javascript-grid-properties/">https://www.ag-grid.com/javascript-grid-properties/</a> for more information.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="st_aggrid.grid_options_builder.GridOptionsBuilder.from_dataframe">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_dataframe</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dataframe</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">pandas.core.frame.DataFrame</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">default_column_parameters</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/st_aggrid/grid_options_builder.html#GridOptionsBuilder.from_dataframe"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#st_aggrid.grid_options_builder.GridOptionsBuilder.from_dataframe" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initializes a GridOptionsBuilder from a pandas dataframe.</p>
+<p>This method creates a column definition for each column in the dataframe and tries to ifer
+correct columnTypes from dataframe’s dtypes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dataframe</strong> – Dataframe to be used to create the GridOptionsBuilder.</p></li>
+<li><p><strong>**default_column_parameters</strong> – Key-pair values that will be merged to defaultColDef dict.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A GridOptionsBuilder instance.</p>
+</dd>
+</dl>
+<p><strong>Example:</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#builds a gridOptions dictionary using a GridOptionsBuilder instance.</span>
+<span class="n">builder</span> <span class="o">=</span> <span class="n">GridOptionsBuilder</span><span class="o">.</span><span class="n">from_dataframe</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+<span class="n">builder</span><span class="o">.</span><span class="n">configure_column</span><span class="p">(</span><span class="s2">&quot;first_column&quot;</span><span class="p">,</span> <span class="n">header_name</span><span class="o">=</span><span class="s2">&quot;First&quot;</span><span class="p">,</span> <span class="n">editable</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">go</span> <span class="o">=</span> <span class="n">builder</span><span class="o">.</span><span class="n">build</span><span class="p">()</span>
+
+<span class="c1">#uses the gridOptions dictionary to configure AgGrid behavior.</span>
+<span class="n">AgGrid</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">gridOptions</span><span class="o">=</span><span class="n">go</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="st_aggrid.grid_options_builder.GridOptionsBuilder.configure_default_column">
+<span class="sig-name descname"><span class="pre">configure_default_column</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">min_column_width</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">resizable</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filterable</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sorteable</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">editable</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">groupable</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">other_default_column_properties</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/st_aggrid/grid_options_builder.html#GridOptionsBuilder.configure_default_column"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#st_aggrid.grid_options_builder.GridOptionsBuilder.configure_default_column" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets default columns definitions.</p>
+<p>More info <a class="reference external" href="https://www.ag-grid.com/javascript-data-grid/column-definitions/#default-column-definitions">here</a></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>min_column_width</strong> – minimum column width.
+Defaults to 5.</p></li>
+<li><p><strong>resizable</strong> – sets columns as resizable.
+Defaults to True.</p></li>
+<li><p><strong>filterable</strong> – sets columns as filterable.
+Defaults to True.</p></li>
+<li><p><strong>sorteable</strong> – sets columns as sorteable.
+Defaults to True.</p></li>
+<li><p><strong>editable</strong> – sets columns as editable.
+Defaults to False.</p></li>
+<li><p><strong>groupable</strong> – sets columns as groupable.
+Defaults to False.</p></li>
+<li><p><strong>**other_default_column_properties</strong> – Aditional keyword arguments values will be added as default columns definition.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="st_aggrid.grid_options_builder.GridOptionsBuilder.configure_auto_height">
+<span class="sig-name descname"><span class="pre">configure_auto_height</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">autoHeight</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/st_aggrid/grid_options_builder.html#GridOptionsBuilder.configure_auto_height"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#st_aggrid.grid_options_builder.GridOptionsBuilder.configure_auto_height" title="Permalink to this definition">¶</a></dt>
+<dd><p>Configures auto height behavior.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>autoHeight</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">bool,</span> <span class="pre">optional</span></code>) – enable or disable auto height. Defaults to True.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="st_aggrid.grid_options_builder.GridOptionsBuilder.configure_columns">
+<span class="sig-name descname"><span class="pre">configure_columns</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">column_names</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">props</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/st_aggrid/grid_options_builder.html#GridOptionsBuilder.configure_columns"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#st_aggrid.grid_options_builder.GridOptionsBuilder.configure_columns" title="Permalink to this definition">¶</a></dt>
+<dd><p>Batch configures columns.</p>
+<p>Key-pair values from props dict will be merged
+to colDefs which field property is present in column_names list.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>column_names</strong> – Columns field properties.
+If any of colDefs mathces <code class="docutils literal notranslate"><span class="pre">**props</span></code> dict is merged.
+Defaults to [].</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="st_aggrid.grid_options_builder.GridOptionsBuilder.configure_column">
+<span class="sig-name descname"><span class="pre">configure_column</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">field</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">header_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">other_column_properties</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/st_aggrid/grid_options_builder.html#GridOptionsBuilder.configure_column"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#st_aggrid.grid_options_builder.GridOptionsBuilder.configure_column" title="Permalink to this definition">¶</a></dt>
+<dd><p>Configures an individual column
+check <a class="reference external" href="https://www.ag-grid.com/javascript-grid-column-properties/">https://www.ag-grid.com/javascript-grid-column-properties/</a> for more information.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>field</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – Field name, usually equals the column header.</p></li>
+<li><p><strong>header_name</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str,</span> <span class="pre">optional</span></code>) – [description]. Defaults to None.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="st_aggrid.grid_options_builder.GridOptionsBuilder.configure_side_bar">
+<span class="sig-name descname"><span class="pre">configure_side_bar</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filters_panel</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">columns_panel</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">defaultToolPanel</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/st_aggrid/grid_options_builder.html#GridOptionsBuilder.configure_side_bar"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#st_aggrid.grid_options_builder.GridOptionsBuilder.configure_side_bar" title="Permalink to this definition">¶</a></dt>
+<dd><p>Configures the side bar.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>filters_panel</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">bool,</span> <span class="pre">optional</span></code>) – enable or disable filters panel. Defaults to True.</p></li>
+<li><p><strong>columns_panel</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">bool,</span> <span class="pre">optional</span></code>) – enable or disable columns panel. Defaults to True.</p></li>
+<li><p><strong>defaultToolPanel</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str,</span> <span class="pre">optional</span></code>) – sets default tool panel either ‘columns’ or ‘filters’. Defaults to panel closed (“”)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="st_aggrid.grid_options_builder.GridOptionsBuilder.configure_selection">
+<span class="sig-name descname"><span class="pre">configure_selection</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">selection_mode</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'single'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_checkbox</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pre_selected_rows</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rowMultiSelectWithClick</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">suppressRowDeselection</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">suppressRowClickSelection</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">groupSelectsChildren</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">groupSelectsFiltered</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/st_aggrid/grid_options_builder.html#GridOptionsBuilder.configure_selection"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#st_aggrid.grid_options_builder.GridOptionsBuilder.configure_selection" title="Permalink to this definition">¶</a></dt>
+<dd><p>Configure the grid selection behavior.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>selection_mode</strong> – Either ‘single’, ‘multiple’ or ‘disabled’. Defaults to ‘single’.</p></li>
+<li><p><strong>use_checkbox</strong> – Enable or disable checkbox selection. Defaults to False.</p></li>
+<li><p><strong>pre_selected_rows</strong> – List of row indexes to be pre-selected. Defaults to [].</p></li>
+<li><p><strong>rowMultiSelectWithClick</strong> – If False user must hold shift to multiselect.
+Defaults to True if selection_mode is ‘multiple’.</p></li>
+<li><p><strong>suppressRowDeselection</strong> – Set to true to prevent rows from being deselected if you hold down Ctrl and click the row
+(once a row is selected, it remains selected until another row is selected in its place).
+By default the grid allows deselection of rows.
+Defaults to False.</p></li>
+<li><p><strong>suppressRowClickSelection</strong> – Supress row selection by clicking.
+Usefull for checkbox selection.
+Defaults to False.</p></li>
+<li><p><strong>groupSelectsChildren</strong> – When rows are grouped selecting a group select all children.
+Defaults to True.</p></li>
+<li><p><strong>groupSelectsFiltered</strong> – When a group is selected filtered rows are also selected.
+Defaults to True.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="st_aggrid.grid_options_builder.GridOptionsBuilder.configure_pagination">
+<span class="sig-name descname"><span class="pre">configure_pagination</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">enabled</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">paginationAutoPageSize</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">paginationPageSize</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">10</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/st_aggrid/grid_options_builder.html#GridOptionsBuilder.configure_pagination"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#st_aggrid.grid_options_builder.GridOptionsBuilder.configure_pagination" title="Permalink to this definition">¶</a></dt>
+<dd><p>Configure grid’s pagination feature</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>enabled</strong> – enable or disable pagination.
+Defaults to True.</p></li>
+<li><p><strong>paginationAutoPageSize</strong> – Automatically sets optimal pagination size based on grid Height.
+Defaults to True.</p></li>
+<li><p><strong>paginationPageSize</strong> – Forces page to have this number of rows per page.
+Defaults to 10.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="st_aggrid.grid_options_builder.GridOptionsBuilder.configure_grid_options">
+<span class="sig-name descname"><span class="pre">configure_grid_options</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">props</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/st_aggrid/grid_options_builder.html#GridOptionsBuilder.configure_grid_options"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#st_aggrid.grid_options_builder.GridOptionsBuilder.configure_grid_options" title="Permalink to this definition">¶</a></dt>
+<dd><p>Merges key-pair values to gridOptions dictionary.</p>
+<p>Use this method to add any other key-pair values to gridOptions dictionary.
+A complete list of available options can be found in <a class="reference external" href="https://www.ag-grid.com/javascript-data-grid/grid-properties/">https://www.ag-grid.com/javascript-data-grid/grid-properties/</a></p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="st_aggrid.grid_options_builder.GridOptionsBuilder.build">
+<span class="sig-name descname"><span class="pre">build</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/st_aggrid/grid_options_builder.html#GridOptionsBuilder.build"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#st_aggrid.grid_options_builder.GridOptionsBuilder.build" title="Permalink to this definition">¶</a></dt>
+<dd><p>Builds the gridOptions dictionary</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Returns a dicionary containing the configured grid options</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="index.html"
+                        title="previous chapter">Welcome to streamlit-aggrid’s documentation!</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="AgGrid.html"
+                        title="next chapter">AgGrid</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/GridOptionsBuilder.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="AgGrid.html" title="AgGrid"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Welcome to streamlit-aggrid’s documentation!"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">streamlit-aggrid 0.2.3 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">GridOptionsBuilder</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2021, Pablo C Fonseca.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.3.2.
+    </div>
+  </body>
+</html>

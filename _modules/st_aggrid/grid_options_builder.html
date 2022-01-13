@@ -1,0 +1,435 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>st_aggrid.grid_options_builder &#8212; streamlit-aggrid 0.2.3 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/nature.css" />
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">streamlit-aggrid 0.2.3 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">st_aggrid.grid_options_builder</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for st_aggrid.grid_options_builder</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">defaultdict</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+
+
+<div class="viewcode-block" id="GridOptionsBuilder"><a class="viewcode-back" href="../../GridOptionsBuilder.html#st_aggrid.grid_options_builder.GridOptionsBuilder">[docs]</a><span class="k">class</span> <span class="nc">GridOptionsBuilder</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Auxiliary class that builds gridOptions dictionary.</span>
+
+<span class="sd">    Use this class to help AgGrid configuration. Any configuration supported by the </span>
+<span class="sd">    gridOptions dictionary can be configured using this class. check https://www.ag-grid.com/javascript-grid-properties/ for more information.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__grid_options</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">dict</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sideBar</span> <span class="o">=</span> <span class="p">{}</span>
+
+<div class="viewcode-block" id="GridOptionsBuilder.from_dataframe"><a class="viewcode-back" href="../../GridOptionsBuilder.html#st_aggrid.grid_options_builder.GridOptionsBuilder.from_dataframe">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">from_dataframe</span><span class="p">(</span><span class="n">dataframe</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="o">**</span><span class="n">default_column_parameters</span><span class="p">):</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Initializes a GridOptionsBuilder from a pandas dataframe.</span>
+
+<span class="sd">        This method creates a column definition for each column in the dataframe and tries to ifer</span>
+<span class="sd">        correct columnTypes from dataframe&#39;s dtypes. </span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            dataframe:</span>
+<span class="sd">                Dataframe to be used to create the GridOptionsBuilder.</span>
+
+<span class="sd">            ``**default_column_parameters``: </span>
+<span class="sd">                Key-pair values that will be merged to defaultColDef dict.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            A GridOptionsBuilder instance.</span>
+
+<span class="sd">        **Example:**</span>
+
+<span class="sd">        .. code-block:: python</span>
+
+<span class="sd">            #builds a gridOptions dictionary using a GridOptionsBuilder instance.</span>
+<span class="sd">            builder = GridOptionsBuilder.from_dataframe(df)</span>
+<span class="sd">            builder.configure_column(&quot;first_column&quot;, header_name=&quot;First&quot;, editable=True)</span>
+<span class="sd">            go = builder.build()</span>
+
+<span class="sd">            #uses the gridOptions dictionary to configure AgGrid behavior.    </span>
+<span class="sd">            AgGrid(df, gridOptions=go)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># numpy types: &#39;biufcmMOSUV&#39; https://numpy.org/doc/stable/reference/generated/numpy.dtype.kind.html</span>
+        <span class="n">type_mapper</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;b&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;textColumn&quot;</span><span class="p">],</span>
+            <span class="s2">&quot;i&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;numericColumn&quot;</span><span class="p">,</span> <span class="s2">&quot;numberColumnFilter&quot;</span><span class="p">],</span>
+            <span class="s2">&quot;u&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;numericColumn&quot;</span><span class="p">,</span> <span class="s2">&quot;numberColumnFilter&quot;</span><span class="p">],</span>
+            <span class="s2">&quot;f&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;numericColumn&quot;</span><span class="p">,</span> <span class="s2">&quot;numberColumnFilter&quot;</span><span class="p">],</span>
+            <span class="s2">&quot;c&quot;</span><span class="p">:</span> <span class="p">[],</span>
+            <span class="s2">&quot;m&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;timedeltaFormat&quot;</span><span class="p">],</span>
+            <span class="s2">&quot;M&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;dateColumnFilter&quot;</span><span class="p">,</span> <span class="s2">&quot;shortDateTimeFormat&quot;</span><span class="p">],</span>
+            <span class="s2">&quot;O&quot;</span><span class="p">:</span> <span class="p">[],</span>
+            <span class="s2">&quot;S&quot;</span><span class="p">:</span> <span class="p">[],</span>
+            <span class="s2">&quot;U&quot;</span><span class="p">:</span> <span class="p">[],</span>
+            <span class="s2">&quot;V&quot;</span><span class="p">:</span> <span class="p">[],</span>
+        <span class="p">}</span>
+
+        <span class="n">gb</span> <span class="o">=</span> <span class="n">GridOptionsBuilder</span><span class="p">()</span>
+        <span class="n">gb</span><span class="o">.</span><span class="n">configure_default_column</span><span class="p">(</span><span class="o">**</span><span class="n">default_column_parameters</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">col_name</span><span class="p">,</span> <span class="n">col_type</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">dataframe</span><span class="o">.</span><span class="n">columns</span><span class="p">,</span> <span class="n">dataframe</span><span class="o">.</span><span class="n">dtypes</span><span class="p">):</span>
+            <span class="n">gb</span><span class="o">.</span><span class="n">configure_column</span><span class="p">(</span><span class="n">field</span><span class="o">=</span><span class="n">col_name</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="n">type_mapper</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">col_type</span><span class="o">.</span><span class="n">kind</span><span class="p">,</span> <span class="p">[]))</span>
+
+        <span class="k">return</span> <span class="n">gb</span></div>
+
+<div class="viewcode-block" id="GridOptionsBuilder.configure_default_column"><a class="viewcode-back" href="../../GridOptionsBuilder.html#st_aggrid.grid_options_builder.GridOptionsBuilder.configure_default_column">[docs]</a>    <span class="k">def</span> <span class="nf">configure_default_column</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">min_column_width</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span>
+        <span class="n">resizable</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="n">filterable</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="n">sorteable</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="n">editable</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">groupable</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">other_default_column_properties</span><span class="p">:</span> <span class="nb">dict</span>
+    <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Sets default columns definitions.</span>
+
+<span class="sd">        More info `here &lt;https://www.ag-grid.com/javascript-data-grid/column-definitions/#default-column-definitions&gt;`_</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            min_column_width:</span>
+<span class="sd">                minimum column width.</span>
+<span class="sd">                Defaults to 5.</span>
+
+<span class="sd">            resizable:</span>
+<span class="sd">                sets columns as resizable.</span>
+<span class="sd">                Defaults to True.</span>
+
+<span class="sd">            filterable:</span>
+<span class="sd">                sets columns as filterable.</span>
+<span class="sd">                Defaults to True.</span>
+
+<span class="sd">            sorteable:</span>
+<span class="sd">                sets columns as sorteable.</span>
+<span class="sd">                Defaults to True.</span>
+
+<span class="sd">            editable:</span>
+<span class="sd">                sets columns as editable.</span>
+<span class="sd">                Defaults to False.</span>
+
+<span class="sd">            groupable:</span>
+<span class="sd">                sets columns as groupable.</span>
+<span class="sd">                Defaults to False.</span>
+
+<span class="sd">            ``**other_default_column_properties``:</span>
+<span class="sd">                Aditional keyword arguments values will be added as default columns definition.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">defaultColDef</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;minWidth&quot;</span><span class="p">:</span> <span class="n">min_column_width</span><span class="p">,</span>
+            <span class="s2">&quot;editable&quot;</span><span class="p">:</span> <span class="n">editable</span><span class="p">,</span>
+            <span class="s2">&quot;filter&quot;</span><span class="p">:</span> <span class="n">filterable</span><span class="p">,</span>
+            <span class="s2">&quot;resizable&quot;</span><span class="p">:</span> <span class="n">resizable</span><span class="p">,</span>
+            <span class="s2">&quot;sortable&quot;</span><span class="p">:</span> <span class="n">sorteable</span><span class="p">,</span>
+        <span class="p">}</span>
+        <span class="k">if</span> <span class="n">groupable</span><span class="p">:</span>
+            <span class="n">defaultColDef</span><span class="p">[</span><span class="s2">&quot;enableRowGroup&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">groupable</span>
+
+        <span class="k">if</span> <span class="n">other_default_column_properties</span><span class="p">:</span>
+            <span class="n">defaultColDef</span> <span class="o">=</span> <span class="p">{</span><span class="o">**</span><span class="n">defaultColDef</span><span class="p">,</span> <span class="o">**</span><span class="n">other_default_column_properties</span><span class="p">}</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">__grid_options</span><span class="p">[</span><span class="s2">&quot;defaultColDef&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">defaultColDef</span></div>
+
+<div class="viewcode-block" id="GridOptionsBuilder.configure_auto_height"><a class="viewcode-back" href="../../GridOptionsBuilder.html#st_aggrid.grid_options_builder.GridOptionsBuilder.configure_auto_height">[docs]</a>    <span class="k">def</span> <span class="nf">configure_auto_height</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">autoHeight</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Configures auto height behavior.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            autoHeight (bool, optional): enable or disable auto height. Defaults to True.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            None            </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="n">autoHeight</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">configure_grid_options</span><span class="p">(</span><span class="n">domLayout</span><span class="o">=</span><span class="s2">&quot;autoHeight&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">configure_grid_options</span><span class="p">(</span><span class="n">domLayout</span><span class="o">=</span><span class="s2">&quot;normal&quot;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="GridOptionsBuilder.configure_columns"><a class="viewcode-back" href="../../GridOptionsBuilder.html#st_aggrid.grid_options_builder.GridOptionsBuilder.configure_columns">[docs]</a>    <span class="k">def</span> <span class="nf">configure_columns</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">column_names</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[],</span> <span class="o">**</span><span class="n">props</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Batch configures columns. </span>
+<span class="sd">        </span>
+<span class="sd">        Key-pair values from props dict will be merged</span>
+<span class="sd">        to colDefs which field property is present in column_names list.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            column_names:</span>
+<span class="sd">                Columns field properties. </span>
+<span class="sd">                If any of colDefs mathces ``**props`` dict is merged.</span>
+<span class="sd">                Defaults to [].</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">__grid_options</span><span class="p">[</span><span class="s2">&quot;columnDefs&quot;</span><span class="p">]:</span>
+            <span class="k">if</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">column_names</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">__grid_options</span><span class="p">[</span><span class="s2">&quot;columnDefs&quot;</span><span class="p">][</span><span class="n">k</span><span class="p">]</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">props</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="GridOptionsBuilder.configure_column"><a class="viewcode-back" href="../../GridOptionsBuilder.html#st_aggrid.grid_options_builder.GridOptionsBuilder.configure_column">[docs]</a>    <span class="k">def</span> <span class="nf">configure_column</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">field</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">header_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">other_column_properties</span>
+    <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Configures an individual column</span>
+<span class="sd">        check https://www.ag-grid.com/javascript-grid-column-properties/ for more information.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            field (str): Field name, usually equals the column header.</span>
+<span class="sd">            header_name (str, optional): [description]. Defaults to None.</span>
+<span class="sd">        </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            None        </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">__grid_options</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;columnDefs&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__grid_options</span><span class="p">[</span><span class="s2">&quot;columnDefs&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">dict</span><span class="p">)</span>
+
+        <span class="n">colDef</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;headerName&quot;</span><span class="p">:</span> <span class="n">header_name</span> <span class="k">if</span> <span class="n">header_name</span> <span class="k">else</span> <span class="n">field</span><span class="p">,</span> <span class="s2">&quot;field&quot;</span><span class="p">:</span> <span class="n">field</span><span class="p">}</span>
+
+        <span class="k">if</span> <span class="n">other_column_properties</span><span class="p">:</span>
+            <span class="n">colDef</span> <span class="o">=</span> <span class="p">{</span><span class="o">**</span><span class="n">colDef</span><span class="p">,</span> <span class="o">**</span><span class="n">other_column_properties</span><span class="p">}</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">__grid_options</span><span class="p">[</span><span class="s2">&quot;columnDefs&quot;</span><span class="p">][</span><span class="n">field</span><span class="p">]</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">colDef</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="GridOptionsBuilder.configure_side_bar"><a class="viewcode-back" href="../../GridOptionsBuilder.html#st_aggrid.grid_options_builder.GridOptionsBuilder.configure_side_bar">[docs]</a>    <span class="k">def</span> <span class="nf">configure_side_bar</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">filters_panel</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="n">columns_panel</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="n">defaultToolPanel</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Configures the side bar.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            filters_panel (bool, optional): enable or disable filters panel. Defaults to True.</span>
+<span class="sd">            columns_panel (bool, optional): enable or disable columns panel. Defaults to True.</span>
+<span class="sd">            defaultToolPanel (str, optional): sets default tool panel either &#39;columns&#39; or &#39;filters&#39;. Defaults to panel closed (&quot;&quot;)</span>
+<span class="sd">        </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">filter_panel</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;filters&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;labelDefault&quot;</span><span class="p">:</span> <span class="s2">&quot;Filters&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;labelKey&quot;</span><span class="p">:</span> <span class="s2">&quot;filters&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;iconKey&quot;</span><span class="p">:</span> <span class="s2">&quot;filter&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;toolPanel&quot;</span><span class="p">:</span> <span class="s2">&quot;agFiltersToolPanel&quot;</span><span class="p">,</span>
+        <span class="p">}</span>
+
+        <span class="n">columns_panel</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;columns&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;labelDefault&quot;</span><span class="p">:</span> <span class="s2">&quot;Columns&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;labelKey&quot;</span><span class="p">:</span> <span class="s2">&quot;columns&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;iconKey&quot;</span><span class="p">:</span> <span class="s2">&quot;columns&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;toolPanel&quot;</span><span class="p">:</span> <span class="s2">&quot;agColumnsToolPanel&quot;</span><span class="p">,</span>
+        <span class="p">}</span>
+
+        <span class="k">if</span> <span class="n">filters_panel</span> <span class="ow">or</span> <span class="n">columns_panel</span><span class="p">:</span>
+            <span class="n">sideBar</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;toolPanels&quot;</span><span class="p">:</span> <span class="p">[],</span> <span class="s2">&quot;defaultToolPanel&quot;</span><span class="p">:</span> <span class="n">defaultToolPanel</span><span class="p">}</span>
+
+            <span class="k">if</span> <span class="n">filters_panel</span><span class="p">:</span>
+                <span class="n">sideBar</span><span class="p">[</span><span class="s2">&quot;toolPanels&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">filter_panel</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">columns_panel</span><span class="p">:</span>
+                <span class="n">sideBar</span><span class="p">[</span><span class="s2">&quot;toolPanels&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">columns_panel</span><span class="p">)</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">__grid_options</span><span class="p">[</span><span class="s2">&quot;sideBar&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">sideBar</span></div>
+
+<div class="viewcode-block" id="GridOptionsBuilder.configure_selection"><a class="viewcode-back" href="../../GridOptionsBuilder.html#st_aggrid.grid_options_builder.GridOptionsBuilder.configure_selection">[docs]</a>    <span class="k">def</span> <span class="nf">configure_selection</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">selection_mode</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;single&quot;</span><span class="p">,</span>
+        <span class="n">use_checkbox</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">pre_selected_rows</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="p">[],</span>
+        <span class="n">rowMultiSelectWithClick</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">suppressRowDeselection</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">suppressRowClickSelection</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">groupSelectsChildren</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="n">groupSelectsFiltered</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Configure the grid selection behavior.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            selection_mode:</span>
+<span class="sd">                Either &#39;single&#39;, &#39;multiple&#39; or &#39;disabled&#39;. Defaults to &#39;single&#39;.</span>
+
+<span class="sd">            use_checkbox: </span>
+<span class="sd">                Enable or disable checkbox selection. Defaults to False.</span>
+
+<span class="sd">            pre_selected_rows:</span>
+<span class="sd">                List of row indexes to be pre-selected. Defaults to [].</span>
+
+<span class="sd">            rowMultiSelectWithClick:</span>
+<span class="sd">                If False user must hold shift to multiselect. </span>
+<span class="sd">                Defaults to True if selection_mode is &#39;multiple&#39;.</span>
+
+<span class="sd">            suppressRowDeselection:</span>
+<span class="sd">                Set to true to prevent rows from being deselected if you hold down Ctrl and click the row</span>
+<span class="sd">                (once a row is selected, it remains selected until another row is selected in its place).</span>
+<span class="sd">                By default the grid allows deselection of rows.</span>
+<span class="sd">                Defaults to False.</span>
+
+<span class="sd">            suppressRowClickSelection:</span>
+<span class="sd">                Supress row selection by clicking. </span>
+<span class="sd">                Usefull for checkbox selection.</span>
+<span class="sd">                Defaults to False.</span>
+
+<span class="sd">            groupSelectsChildren:</span>
+<span class="sd">                When rows are grouped selecting a group select all children.</span>
+<span class="sd">                Defaults to True.</span>
+
+<span class="sd">            groupSelectsFiltered:</span>
+<span class="sd">                When a group is selected filtered rows are also selected.</span>
+<span class="sd">                Defaults to True.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="n">selection_mode</span> <span class="o">==</span> <span class="s2">&quot;disabled&quot;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__grid_options</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;rowSelection&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__grid_options</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;rowMultiSelectWithClick&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__grid_options</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;suppressRowDeselection&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__grid_options</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;suppressRowClickSelection&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__grid_options</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;groupSelectsChildren&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__grid_options</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;groupSelectsFiltered&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+            <span class="k">return</span>
+
+        <span class="k">if</span> <span class="n">use_checkbox</span><span class="p">:</span>
+            <span class="n">suppressRowClickSelection</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="n">first_key</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="nb">iter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__grid_options</span><span class="p">[</span><span class="s2">&quot;columnDefs&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">()))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__grid_options</span><span class="p">[</span><span class="s2">&quot;columnDefs&quot;</span><span class="p">][</span><span class="n">first_key</span><span class="p">][</span><span class="s2">&quot;checkboxSelection&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+
+        <span class="k">if</span> <span class="n">pre_selected_rows</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__grid_options</span><span class="p">[</span><span class="s2">&quot;preSelectedRows&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pre_selected_rows</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">__grid_options</span><span class="p">[</span><span class="s2">&quot;rowSelection&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">selection_mode</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__grid_options</span><span class="p">[</span><span class="s2">&quot;rowMultiSelectWithClick&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">rowMultiSelectWithClick</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__grid_options</span><span class="p">[</span><span class="s2">&quot;suppressRowDeselection&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">suppressRowDeselection</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__grid_options</span><span class="p">[</span><span class="s2">&quot;suppressRowClickSelection&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">suppressRowClickSelection</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__grid_options</span><span class="p">[</span><span class="s2">&quot;groupSelectsChildren&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">groupSelectsChildren</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__grid_options</span><span class="p">[</span><span class="s2">&quot;groupSelectsFiltered&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">groupSelectsFiltered</span></div>
+
+<div class="viewcode-block" id="GridOptionsBuilder.configure_pagination"><a class="viewcode-back" href="../../GridOptionsBuilder.html#st_aggrid.grid_options_builder.GridOptionsBuilder.configure_pagination">[docs]</a>    <span class="k">def</span> <span class="nf">configure_pagination</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">enabled</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="n">paginationAutoPageSize</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="n">paginationPageSize</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Configure grid&#39;s pagination feature</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            enabled:</span>
+<span class="sd">                enable or disable pagination.</span>
+<span class="sd">                Defaults to True.</span>
+
+<span class="sd">            paginationAutoPageSize:</span>
+<span class="sd">                Automatically sets optimal pagination size based on grid Height.</span>
+<span class="sd">                Defaults to True.</span>
+
+<span class="sd">            paginationPageSize:</span>
+<span class="sd">                Forces page to have this number of rows per page.</span>
+<span class="sd">                Defaults to 10.</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">enabled</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__grid_options</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;pagination&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__grid_options</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;paginationAutoPageSize&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__grid_options</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;paginationPageSize&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+            <span class="k">return</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">__grid_options</span><span class="p">[</span><span class="s2">&quot;pagination&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">if</span> <span class="n">paginationAutoPageSize</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__grid_options</span><span class="p">[</span><span class="s2">&quot;paginationAutoPageSize&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">paginationAutoPageSize</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__grid_options</span><span class="p">[</span><span class="s2">&quot;paginationPageSize&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">paginationPageSize</span></div>
+
+<div class="viewcode-block" id="GridOptionsBuilder.configure_grid_options"><a class="viewcode-back" href="../../GridOptionsBuilder.html#st_aggrid.grid_options_builder.GridOptionsBuilder.configure_grid_options">[docs]</a>    <span class="k">def</span> <span class="nf">configure_grid_options</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">props</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Merges key-pair values to gridOptions dictionary.</span>
+
+<span class="sd">        Use this method to add any other key-pair values to gridOptions dictionary.</span>
+<span class="sd">        A complete list of available options can be found in https://www.ag-grid.com/javascript-data-grid/grid-properties/</span>
+<span class="sd">        </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__grid_options</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">props</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="GridOptionsBuilder.build"><a class="viewcode-back" href="../../GridOptionsBuilder.html#st_aggrid.grid_options_builder.GridOptionsBuilder.build">[docs]</a>    <span class="k">def</span> <span class="nf">build</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Builds the gridOptions dictionary</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            dict: Returns a dicionary containing the configured grid options</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__grid_options</span><span class="p">[</span><span class="s2">&quot;columnDefs&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__grid_options</span><span class="p">[</span><span class="s2">&quot;columnDefs&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">()</span>
+        <span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__grid_options</span></div></div>
+</pre></div>
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">streamlit-aggrid 0.2.3 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">st_aggrid.grid_options_builder</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2021, Pablo C Fonseca.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.3.2.
+    </div>
+  </body>
+</html>

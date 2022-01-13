@@ -1,0 +1,181 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>AgGrid &#8212; streamlit-aggrid 0.2.3 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinxdoc.css" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="GridOptionsBuilder" href="GridOptionsBuilder.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="GridOptionsBuilder.html" title="GridOptionsBuilder"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">streamlit-aggrid 0.2.3 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">AgGrid</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="aggrid">
+<h1>AgGrid<a class="headerlink" href="#aggrid" title="Permalink to this headline">¶</a></h1>
+<dl class="py function">
+<dt class="sig sig-object py" id="st_aggrid.AgGrid">
+<span class="sig-name descname"><span class="pre">AgGrid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dataframe</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">pandas.core.frame.DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gridOptions</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">height</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">400</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">width</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fit_columns_on_grid_load</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">update_mode</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">st_aggrid.shared.GridUpdateMode</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'value_changed'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_return_mode</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">st_aggrid.shared.DataReturnMode</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'as_input'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">allow_unsafe_jscode</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">enable_enterprise_modules</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">license_key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">try_to_convert_back_to_original_types</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">conversion_errors</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'coerce'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reload_data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">theme</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'light'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">default_column_parameters</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span></span></span><a class="reference internal" href="_modules/st_aggrid.html#AgGrid"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#st_aggrid.AgGrid" title="Permalink to this definition">¶</a></dt>
+<dd><p>Render the Grid Component using the ag-Grid JavaScript library and a dataframe.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dataframe</strong> – The underlying dataframe to be displayed in the grid.</p></li>
+<li><p><strong>gridOption</strong> – A dictionary of options for ag-grid. Documentation on <a class="reference external" href="http://www.ag-grid.com">http://www.ag-grid.com</a>
+If None default grid options will be created with GridOptionsBuilder.from_dataframe() call.</p></li>
+<li><p><strong>height</strong> – The grid height, by default 400</p></li>
+<li><p><strong>width</strong> – The grid width, by default None
+.. deprecated:: 0.2.0</p></li>
+<li><p><strong>fit_columns_on_grid_load</strong> – Automatically fit columns to the grid width. Defaults to False.</p></li>
+<li><p><strong>update_mode</strong> – <p>Defines how the grid will send results back to streamlit.
+must be either a string, one or a bitwise combination of:</p>
+<blockquote>
+<div><ul>
+<li><p>GridUpdateMode.NO_UPDATE</p></li>
+<li><p>GridUpdateMode.MANUAL</p></li>
+<li><p>GridUpdateMode.VALUE_CHANGED</p></li>
+<li><p>GridUpdateMode.SELECTION_CHANGED</p></li>
+<li><p>GridUpdateMode.FILTERING_CHANGED</p></li>
+<li><p>GridUpdateMode.SORTING_CHANGED</p></li>
+<li><p>GridUpdateMode.MODEL_CHANGED</p></li>
+</ul>
+</div></blockquote>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>When using  <em>GridUpdateMode.MANUAL</em> a save button will be drawn on top of grid.
+modes can be combined with bitwise OR operator <em>|</em> for instance:
+GridUpdateMode = VALUE_CHANGED | SELECTION_CHANGED | FILTERING_CHANGED | SORTING_CHANGED</p>
+</div>
+<p>Defaults to GridUpdateMode.VALUE_CHANGED.</p>
+</p></li>
+<li><p><strong>data_return_mode</strong> – <dl class="simple">
+<dt>Defines how the data will be retrieved from components client side. One of:</dt><dd><ul>
+<li><p>DataReturnMode.AS_INPUT             -&gt; Returns grid data as inputed. Includes cell editions</p></li>
+<li><p>DataReturnMode.FILTERED             -&gt; Returns filtered grid data, maintains input order</p></li>
+<li><p>DataReturnMode.FILTERED_AND_SORTED  -&gt; Returns grid data filtered and sorted</p></li>
+</ul>
+</dd>
+</dl>
+<p>Defaults to DataReturnMode.AS_INPUT.</p>
+</p></li>
+<li><p><strong>allow_unsafe_jscode</strong> – Allows javascript code to be injected in gridOptions. Defaults to False.</p></li>
+<li><p><strong>enable_enterprise_modules</strong> – Loads Ag-Grid enterprise modules (check licensing). Defaults to False.</p></li>
+<li><p><strong>license_key</strong> – License key for enterprise modules. Defaults to None.</p></li>
+<li><p><strong>try_to_convert_back_to_original_types</strong> – Attempts to convert back to original data types. Defaults to True.</p></li>
+<li><p><strong>conversion_errors</strong> – <dl class="simple">
+<dt>Behaviour when conversion fails. One of:</dt><dd><ul>
+<li><p>’raise’     -&gt; invalid parsing will raise an exception.</p></li>
+<li><p>’coerce’    -&gt; then invalid parsing will be set as NaT/NaN.</p></li>
+<li><p>’ignore’    -&gt; invalid parsing will return the input.</p></li>
+</ul>
+</dd>
+</dl>
+<p>Defaults to ‘coerce’.</p>
+</p></li>
+<li><p><strong>reload_data</strong> – Force AgGrid to reload data using api calls. Should be false on most use cases. Defaults to False.</p></li>
+<li><p><strong>theme</strong> – <dl class="simple">
+<dt>Theme used by ag-grid. One of:</dt><dd><ul>
+<li><p>’streamlit’ -&gt; follows default streamlit colors</p></li>
+<li><p>’light’     -&gt; ag-grid balham-light theme</p></li>
+<li><p>’dark’      -&gt; ag-grid balham-dark theme</p></li>
+<li><p>’blue’      -&gt; ag-grid blue theme</p></li>
+<li><p>’fresh’     -&gt; ag-grid fresh theme</p></li>
+<li><p>’material’  -&gt; ag-grid material theme</p></li>
+</ul>
+</dd>
+</dl>
+<p>Defaults to ‘light’.</p>
+</p></li>
+<li><p><strong>key</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">typing.Any,</span> <span class="pre">optional</span></code>) – Streamlit key argument. Check streamlit’s documentation. Defaults to None.</p></li>
+<li><p><strong>convenience</strong> (<em>For</em>) – </p></li>
+<li><p><strong>defaultColDef.</strong> (<em>additional keyword arguments will be merged to gridOptions</em>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A dictionary with members:
+data -&gt; grid’s data, including edited values.
+selected -&gt; list of selected rows</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="GridOptionsBuilder.html"
+                        title="previous chapter">GridOptionsBuilder</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/AgGrid.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="GridOptionsBuilder.html" title="GridOptionsBuilder"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">streamlit-aggrid 0.2.3 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">AgGrid</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2021, Pablo C Fonseca.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.3.2.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,353 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>st_aggrid &#8212; streamlit-aggrid 0.2.3 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/nature.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="nav-item nav-item-0"><a href="../index.html">streamlit-aggrid 0.2.3 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">st_aggrid</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for st_aggrid</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">streamlit.components.v1</span> <span class="k">as</span> <span class="nn">components</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">simplejson</span>
+<span class="kn">import</span> <span class="nn">warnings</span>
+<span class="kn">from</span> <span class="nn">dotenv</span> <span class="kn">import</span> <span class="n">load_dotenv</span>
+<span class="kn">import</span> <span class="nn">typing</span>
+
+<span class="kn">from</span> <span class="nn">st_aggrid.grid_options_builder</span> <span class="kn">import</span> <span class="n">GridOptionsBuilder</span>
+<span class="kn">from</span> <span class="nn">st_aggrid.shared</span> <span class="kn">import</span> <span class="n">GridUpdateMode</span><span class="p">,</span> <span class="n">DataReturnMode</span><span class="p">,</span> <span class="n">JsCode</span><span class="p">,</span> <span class="n">walk_gridOptions</span>
+<span class="kn">from</span> <span class="nn">numbers</span> <span class="kn">import</span> <span class="n">Number</span>
+
+<span class="n">load_dotenv</span><span class="p">()</span>
+
+<span class="n">_RELEASE</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;AGGRID_RELEASE&quot;</span><span class="p">,</span> <span class="s2">&quot;true&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;true&quot;</span>
+
+<span class="k">if</span> <span class="ow">not</span> <span class="n">_RELEASE</span><span class="p">:</span>
+    <span class="n">_component_func</span> <span class="o">=</span> <span class="n">components</span><span class="o">.</span><span class="n">declare_component</span><span class="p">(</span>
+        <span class="s2">&quot;agGrid&quot;</span><span class="p">,</span>
+        <span class="n">url</span><span class="o">=</span><span class="s2">&quot;http://localhost:3001&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="n">parent_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="vm">__file__</span><span class="p">))</span>
+    <span class="n">build_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">parent_dir</span><span class="p">,</span> <span class="s2">&quot;frontend&quot;</span><span class="p">,</span> <span class="s2">&quot;build&quot;</span><span class="p">)</span>
+    <span class="n">_component_func</span> <span class="o">=</span> <span class="n">components</span><span class="o">.</span><span class="n">declare_component</span><span class="p">(</span><span class="s2">&quot;agGrid&quot;</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="n">build_dir</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="AgGrid"><a class="viewcode-back" href="../AgGrid.html#st_aggrid.AgGrid">[docs]</a><span class="k">def</span> <span class="nf">AgGrid</span><span class="p">(</span>
+    <span class="n">dataframe</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
+    <span class="n">gridOptions</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Dict</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">height</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">400</span><span class="p">,</span>
+    <span class="n">width</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">fit_columns_on_grid_load</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="n">update_mode</span><span class="p">:</span> <span class="n">GridUpdateMode</span> <span class="o">=</span> <span class="s2">&quot;value_changed&quot;</span><span class="p">,</span>
+    <span class="n">data_return_mode</span><span class="p">:</span> <span class="n">DataReturnMode</span> <span class="o">=</span> <span class="s2">&quot;as_input&quot;</span><span class="p">,</span>
+    <span class="n">allow_unsafe_jscode</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="n">enable_enterprise_modules</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="n">license_key</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">try_to_convert_back_to_original_types</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="n">conversion_errors</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;coerce&quot;</span><span class="p">,</span>
+    <span class="n">reload_data</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="n">theme</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;light&quot;</span><span class="p">,</span>
+    <span class="n">key</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Any</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="o">**</span><span class="n">default_column_parameters</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">Dict</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Render the Grid Component using the ag-Grid JavaScript library and a dataframe.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        dataframe:</span>
+<span class="sd">            The underlying dataframe to be displayed in the grid.</span>
+
+<span class="sd">        gridOption: </span>
+<span class="sd">            A dictionary of options for ag-grid. Documentation on http://www.ag-grid.com</span>
+<span class="sd">            If None default grid options will be created with GridOptionsBuilder.from_dataframe() call.</span>
+
+<span class="sd">        height:</span>
+<span class="sd">            The grid height, by default 400</span>
+
+<span class="sd">        width:</span>
+<span class="sd">            The grid width, by default None</span>
+<span class="sd">            .. deprecated:: 0.2.0</span>
+
+<span class="sd">        fit_columns_on_grid_load:</span>
+<span class="sd">            Automatically fit columns to the grid width. Defaults to False.</span>
+
+<span class="sd">        update_mode: </span>
+<span class="sd">            Defines how the grid will send results back to streamlit.</span>
+<span class="sd">            must be either a string, one or a bitwise combination of:</span>
+<span class="sd">                + GridUpdateMode.NO_UPDATE</span>
+<span class="sd">                + GridUpdateMode.MANUAL</span>
+<span class="sd">                + GridUpdateMode.VALUE_CHANGED</span>
+<span class="sd">                + GridUpdateMode.SELECTION_CHANGED</span>
+<span class="sd">                + GridUpdateMode.FILTERING_CHANGED</span>
+<span class="sd">                + GridUpdateMode.SORTING_CHANGED</span>
+<span class="sd">                + GridUpdateMode.MODEL_CHANGED</span>
+
+<span class="sd">            .. note::</span>
+<span class="sd">                When using  *GridUpdateMode.MANUAL* a save button will be drawn on top of grid.</span>
+<span class="sd">                modes can be combined with bitwise OR operator *|* for instance:</span>
+<span class="sd">                GridUpdateMode = VALUE_CHANGED | SELECTION_CHANGED | FILTERING_CHANGED | SORTING_CHANGED</span>
+<span class="sd">            </span>
+<span class="sd">            Defaults to GridUpdateMode.VALUE_CHANGED.</span>
+
+<span class="sd">        data_return_mode:</span>
+<span class="sd">            Defines how the data will be retrieved from components client side. One of:</span>
+<span class="sd">                + DataReturnMode.AS_INPUT             -&gt; Returns grid data as inputed. Includes cell editions</span>
+<span class="sd">                + DataReturnMode.FILTERED             -&gt; Returns filtered grid data, maintains input order</span>
+<span class="sd">                + DataReturnMode.FILTERED_AND_SORTED  -&gt; Returns grid data filtered and sorted</span>
+<span class="sd">                </span>
+<span class="sd">            Defaults to DataReturnMode.AS_INPUT.</span>
+
+<span class="sd">        allow_unsafe_jscode:</span>
+<span class="sd">            Allows javascript code to be injected in gridOptions. Defaults to False.</span>
+
+<span class="sd">        enable_enterprise_modules:</span>
+<span class="sd">            Loads Ag-Grid enterprise modules (check licensing). Defaults to False.</span>
+
+<span class="sd">        license_key:</span>
+<span class="sd">            License key for enterprise modules. Defaults to None.</span>
+
+<span class="sd">        try_to_convert_back_to_original_types:</span>
+<span class="sd">            Attempts to convert back to original data types. Defaults to True.</span>
+
+<span class="sd">        conversion_errors:</span>
+<span class="sd">            Behaviour when conversion fails. One of:</span>
+<span class="sd">                + &#39;raise&#39;     -&gt; invalid parsing will raise an exception.</span>
+<span class="sd">                + &#39;coerce&#39;    -&gt; then invalid parsing will be set as NaT/NaN.</span>
+<span class="sd">                + &#39;ignore&#39;    -&gt; invalid parsing will return the input.</span>
+<span class="sd">           </span>
+<span class="sd">            Defaults to &#39;coerce&#39;.</span>
+
+<span class="sd">        reload_data:   </span>
+<span class="sd">            Force AgGrid to reload data using api calls. Should be false on most use cases. Defaults to False.</span>
+
+<span class="sd">        theme:</span>
+<span class="sd">            Theme used by ag-grid. One of:</span>
+<span class="sd">                + &#39;streamlit&#39; -&gt; follows default streamlit colors</span>
+<span class="sd">                + &#39;light&#39;     -&gt; ag-grid balham-light theme</span>
+<span class="sd">                + &#39;dark&#39;      -&gt; ag-grid balham-dark theme</span>
+<span class="sd">                + &#39;blue&#39;      -&gt; ag-grid blue theme</span>
+<span class="sd">                + &#39;fresh&#39;     -&gt; ag-grid fresh theme</span>
+<span class="sd">                + &#39;material&#39;  -&gt; ag-grid material theme</span>
+<span class="sd">        </span>
+<span class="sd">            Defaults to &#39;light&#39;.</span>
+
+<span class="sd">        key (typing.Any, optional):</span>
+<span class="sd">             Streamlit key argument. Check streamlit&#39;s documentation. Defaults to None.</span>
+
+<span class="sd">        For convenience, additional keyword arguments will be merged to gridOptions defaultColDef.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        dict: </span>
+<span class="sd">            A dictionary with members:</span>
+<span class="sd">            data -&gt; grid&#39;s data, including edited values.</span>
+<span class="sd">            selected -&gt; list of selected rows</span>
+<span class="sd">                </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">width</span><span class="p">:</span>
+        <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+            <span class="s2">&quot;DEPRECATION Warning: width parameter is deprecated and will be removed on next version.&quot;</span>
+        <span class="p">)</span>
+
+    <span class="n">response</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">response</span><span class="p">[</span><span class="s2">&quot;data&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">dataframe</span>
+    <span class="n">response</span><span class="p">[</span><span class="s2">&quot;selected_rows&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="c1"># basic numpy types of dataframe</span>
+    <span class="n">frame_dtypes</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">dataframe</span><span class="o">.</span><span class="n">columns</span><span class="p">,</span> <span class="p">(</span><span class="n">t</span><span class="o">.</span><span class="n">kind</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">dataframe</span><span class="o">.</span><span class="n">dtypes</span><span class="p">)))</span>
+
+    <span class="c1"># if no gridOptions is passed, builds a default one.</span>
+    <span class="k">if</span> <span class="n">gridOptions</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">gb</span> <span class="o">=</span> <span class="n">GridOptionsBuilder</span><span class="o">.</span><span class="n">from_dataframe</span><span class="p">(</span><span class="n">dataframe</span><span class="p">,</span> <span class="o">**</span><span class="n">default_column_parameters</span><span class="p">)</span>
+        <span class="n">gridOptions</span> <span class="o">=</span> <span class="n">gb</span><span class="o">.</span><span class="n">build</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">cast_to_serializable</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
+        <span class="n">isoformat</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="s2">&quot;isoformat&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="n">isoformat</span><span class="p">)</span> <span class="ow">and</span> <span class="n">callable</span><span class="p">(</span><span class="n">isoformat</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">isoformat</span><span class="p">()</span>
+
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">Number</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="ow">or</span> <span class="n">np</span><span class="o">.</span><span class="n">isinf</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
+                <span class="k">return</span> <span class="n">value</span><span class="o">.</span><span class="fm">__str__</span><span class="p">()</span>
+
+            <span class="k">return</span> <span class="n">value</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">value</span><span class="o">.</span><span class="fm">__str__</span><span class="p">()</span>
+
+    <span class="n">json_frame</span> <span class="o">=</span> <span class="n">dataframe</span><span class="o">.</span><span class="n">applymap</span><span class="p">(</span><span class="n">cast_to_serializable</span><span class="p">)</span>
+    <span class="n">row_data</span> <span class="o">=</span> <span class="n">json_frame</span><span class="o">.</span><span class="n">to_dict</span><span class="p">(</span><span class="n">orient</span><span class="o">=</span><span class="s2">&quot;records&quot;</span><span class="p">)</span>
+    <span class="n">row_data</span> <span class="o">=</span> <span class="n">simplejson</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">row_data</span><span class="p">,</span> <span class="n">ignore_nan</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">allow_unsafe_jscode</span><span class="p">:</span>
+        <span class="n">walk_gridOptions</span><span class="p">(</span>
+            <span class="n">gridOptions</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">v</span><span class="p">:</span> <span class="n">v</span><span class="o">.</span><span class="n">js_code</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">JsCode</span><span class="p">)</span> <span class="k">else</span> <span class="n">v</span>
+        <span class="p">)</span>
+
+    <span class="n">_available_themes</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;streamlit&quot;</span><span class="p">,</span> <span class="s2">&quot;light&quot;</span><span class="p">,</span> <span class="s2">&quot;dark&quot;</span><span class="p">,</span> <span class="s2">&quot;blue&quot;</span><span class="p">,</span> <span class="s2">&quot;fresh&quot;</span><span class="p">,</span> <span class="s2">&quot;material&quot;</span><span class="p">]</span>
+    <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">theme</span><span class="p">,</span> <span class="nb">str</span><span class="p">))</span> <span class="ow">or</span> <span class="p">(</span><span class="ow">not</span> <span class="n">theme</span> <span class="ow">in</span> <span class="n">_available_themes</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">theme</span><span class="si">}</span><span class="s2"> is not valid. Available options: </span><span class="si">{</span><span class="n">_available_themes</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="p">)</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data_return_mode</span><span class="p">,</span> <span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">DataReturnMode</span><span class="p">)):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">data_return_mode</span><span class="si">}</span><span class="s2"> is not valid.&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data_return_mode</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="n">data_return_mode</span> <span class="o">=</span> <span class="n">DataReturnMode</span><span class="p">[</span><span class="n">data_return_mode</span><span class="o">.</span><span class="n">upper</span><span class="p">()]</span>
+    <span class="k">except</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">data_return_mode</span><span class="si">}</span><span class="s2"> is not valid.&quot;</span><span class="p">)</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">update_mode</span><span class="p">,</span> <span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">GridUpdateMode</span><span class="p">)):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">update_mode</span><span class="si">}</span><span class="s2"> is not valid.&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">update_mode</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="n">update_mode</span> <span class="o">=</span> <span class="n">GridUpdateMode</span><span class="p">[</span><span class="n">update_mode</span><span class="o">.</span><span class="n">upper</span><span class="p">()]</span>
+    <span class="k">except</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">data_return_mode</span><span class="si">}</span><span class="s2"> is not valid.&quot;</span><span class="p">)</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">component_value</span> <span class="o">=</span> <span class="n">_component_func</span><span class="p">(</span>
+            <span class="n">gridOptions</span><span class="o">=</span><span class="n">gridOptions</span><span class="p">,</span>
+            <span class="n">row_data</span><span class="o">=</span><span class="n">row_data</span><span class="p">,</span>
+            <span class="n">height</span><span class="o">=</span><span class="n">height</span><span class="p">,</span>
+            <span class="n">width</span><span class="o">=</span><span class="n">width</span><span class="p">,</span>
+            <span class="n">fit_columns_on_grid_load</span><span class="o">=</span><span class="n">fit_columns_on_grid_load</span><span class="p">,</span>
+            <span class="n">update_mode</span><span class="o">=</span><span class="n">update_mode</span><span class="p">,</span>
+            <span class="n">data_return_mode</span><span class="o">=</span><span class="n">data_return_mode</span><span class="p">,</span>
+            <span class="n">frame_dtypes</span><span class="o">=</span><span class="n">frame_dtypes</span><span class="p">,</span>
+            <span class="n">allow_unsafe_jscode</span><span class="o">=</span><span class="n">allow_unsafe_jscode</span><span class="p">,</span>
+            <span class="n">enable_enterprise_modules</span><span class="o">=</span><span class="n">enable_enterprise_modules</span><span class="p">,</span>
+            <span class="n">license_key</span><span class="o">=</span><span class="n">license_key</span><span class="p">,</span>
+            <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">reload_data</span><span class="o">=</span><span class="n">reload_data</span><span class="p">,</span>
+            <span class="n">theme</span><span class="o">=</span><span class="n">theme</span><span class="p">,</span>
+            <span class="n">key</span><span class="o">=</span><span class="n">key</span><span class="p">,</span>
+        <span class="p">)</span>
+
+    <span class="k">except</span> <span class="n">components</span><span class="o">.</span><span class="n">components</span><span class="o">.</span><span class="n">MarshallComponentException</span> <span class="k">as</span> <span class="n">ex</span><span class="p">:</span>
+        <span class="c1"># a more complete error message.</span>
+        <span class="n">args</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">ex</span><span class="o">.</span><span class="n">args</span><span class="p">)</span>
+        <span class="n">args</span><span class="p">[</span>
+            <span class="mi">0</span>
+        <span class="p">]</span> <span class="o">+=</span> <span class="s2">&quot;. If you&#39;re using custom JsCode objects on gridOptions, ensure that allow_unsafe_jscode is True.&quot;</span>
+        <span class="n">ex</span> <span class="o">=</span> <span class="n">components</span><span class="o">.</span><span class="n">components</span><span class="o">.</span><span class="n">MarshallComponentException</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="p">(</span><span class="n">ex</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">component_value</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">component_value</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="n">component_value</span> <span class="o">=</span> <span class="n">simplejson</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">component_value</span><span class="p">)</span>
+        <span class="n">frame</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">component_value</span><span class="p">[</span><span class="s2">&quot;rowData&quot;</span><span class="p">])</span>
+        <span class="n">original_types</span> <span class="o">=</span> <span class="n">component_value</span><span class="p">[</span><span class="s2">&quot;originalDtypes&quot;</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">frame</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
+            <span class="c1"># maybe this is not the best solution. Should it store original types? What happens when grid pivots?</span>
+            <span class="k">if</span> <span class="n">try_to_convert_back_to_original_types</span><span class="p">:</span>
+                <span class="n">numeric_columns</span> <span class="o">=</span> <span class="p">{</span>
+                    <span class="n">k</span><span class="p">:</span> <span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">original_types</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">v</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;i&quot;</span><span class="p">,</span> <span class="s2">&quot;u&quot;</span><span class="p">,</span> <span class="s2">&quot;f&quot;</span><span class="p">]</span>
+                <span class="p">}</span>
+                <span class="k">if</span> <span class="n">numeric_columns</span><span class="p">:</span>
+                    <span class="n">frame</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="n">numeric_columns</span><span class="p">]</span> <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="n">numeric_columns</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span>
+                        <span class="n">pd</span><span class="o">.</span><span class="n">to_numeric</span><span class="p">,</span> <span class="n">errors</span><span class="o">=</span><span class="n">conversion_errors</span>
+                    <span class="p">)</span>
+
+                <span class="n">text_columns</span> <span class="o">=</span> <span class="p">{</span>
+                    <span class="n">k</span><span class="p">:</span> <span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">original_types</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">v</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;O&quot;</span><span class="p">,</span> <span class="s2">&quot;S&quot;</span><span class="p">,</span> <span class="s2">&quot;U&quot;</span><span class="p">]</span>
+                <span class="p">}</span>
+                <span class="k">if</span> <span class="n">text_columns</span><span class="p">:</span>
+                    <span class="n">frame</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="n">text_columns</span><span class="p">]</span> <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="n">text_columns</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span>
+
+                <span class="n">date_columns</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">original_types</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">v</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;M&quot;</span><span class="p">]}</span>
+                <span class="k">if</span> <span class="n">date_columns</span><span class="p">:</span>
+                    <span class="n">frame</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="n">date_columns</span><span class="p">]</span> <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="n">date_columns</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span>
+                        <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">,</span> <span class="n">errors</span><span class="o">=</span><span class="n">conversion_errors</span>
+                    <span class="p">)</span>
+
+                <span class="n">timedelta_columns</span> <span class="o">=</span> <span class="p">{</span>
+                    <span class="n">k</span><span class="p">:</span> <span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">original_types</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">v</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;m&quot;</span><span class="p">]</span>
+                <span class="p">}</span>
+                <span class="k">if</span> <span class="n">timedelta_columns</span><span class="p">:</span>
+
+                    <span class="k">def</span> <span class="nf">cast_to_timedelta</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
+                        <span class="k">try</span><span class="p">:</span>
+                            <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">Timedelta</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+                        <span class="k">except</span><span class="p">:</span>
+                            <span class="k">return</span> <span class="n">s</span>
+
+                    <span class="n">frame</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="n">timedelta_columns</span><span class="p">]</span> <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span>
+                        <span class="p">:,</span> <span class="n">timedelta_columns</span>
+                    <span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">cast_to_timedelta</span><span class="p">)</span>
+
+        <span class="n">response</span><span class="p">[</span><span class="s2">&quot;data&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">frame</span>
+        <span class="n">response</span><span class="p">[</span><span class="s2">&quot;selected_rows&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">component_value</span><span class="p">[</span><span class="s2">&quot;selectedRows&quot;</span><span class="p">]</span>
+
+    <span class="k">return</span> <span class="n">response</span></div>
+</pre></div>
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="nav-item nav-item-0"><a href="../index.html">streamlit-aggrid 0.2.3 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" >Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">st_aggrid</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2021, Pablo C Fonseca.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.3.2.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,6 @@
+﻿st\_aggrid.AgGrid
+=================
+
+.. currentmodule:: st_aggrid
+
+.. autofunction:: AgGrid
